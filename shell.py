@@ -60,10 +60,11 @@ class Parser:
         
         parsed = string.split()
         
-        if parsed[-1] == "&":
-            global _runInBackground
-            _runInBackground = True
-            parsed.remove("&")
+        if len(parsed) > 0:
+            if parsed[-1] == "&":
+                global _runInBackground
+                _runInBackground = True
+                parsed.remove("&")
             
         return parsed
 
@@ -78,10 +79,6 @@ def main():
         cwd = os.getcwd()
         stri = input(cwd + "$ ")
         
-        # call the CommandLine class, Parser, to read and parse
-        x = Parser(stri)
-        xlist = x.parse(stri)
-        
         # implement exit and pwd and newline commands
         if stri=="exit":
             break
@@ -90,37 +87,42 @@ def main():
         elif stri=="pwd":
             print(cwd)
 
-        # call cd function
-        elif xlist[0] == "cd":
-            CD(xlist)
-        
-        # implement non-built-in commands
-        
-        # if a full pathname was given
-        elif os.path.isabs(xlist[0]):
-            # check if program exists and is executable
-            #xlist[0] += ".exe"
-            if os.access(xlist[0], os.F_OK) and os.access(xlist[0], os.X_OK):
-                # call execute
-                execute(xlist)
-            # or else print error
-            else:
-                print("Error: path doesn't exist or is inexecutable: ", xlist[0])
-        
-        # otherwise find location of cmd in path using GetPath()
         else:
-            #xlist[0] += ".exe"		# only on Windows?
-            y = GetPath()
-            path = y.find(xlist[0])
-            # if not found print error
-            if path == "":
-                print("Error: command not found: ", xlist[0])
-            # build the fully-specified string
+            # call the CommandLine class, Parser, to read and parse
+            x = Parser(stri)
+            xlist = x.parse(stri)
+
+            # call cd function
+            if xlist[0] == "cd":
+                CD(xlist)
+            
+            # implement non-built-in commands
+            
+            # if a full pathname was given
+            elif os.path.isabs(xlist[0]):
+                # check if program exists and is executable
+                #xlist[0] += ".exe"
+                if os.access(xlist[0], os.F_OK) and os.access(xlist[0], os.X_OK):
+                    # call execute
+                    execute(xlist)
+                # or else print error
+                else:
+                    print("Error: path doesn't exist or is inexecutable: ", xlist[0])
+            
+            # otherwise find location of cmd in path using GetPath()
             else:
-                #path = path + "\\" + xlist[0]		# for run on Windows add \
-                path += xlist[0]
-                # call execute
-                execute(xlist)
+                #xlist[0] += ".exe"		# only on Windows?
+                y = GetPath()
+                path = y.find(xlist[0])
+                # if not found print error
+                if path == "":
+                    print("Error: command not found: ", xlist[0])
+                # build the fully-specified string
+                else:
+                    #path = path + "\\" + xlist[0]		# for run on Windows add \
+                    path += xlist[0]
+                    # call execute
+                    execute(xlist)
 
 def CD(xlist):
     '''This function implements the cd command. '''
