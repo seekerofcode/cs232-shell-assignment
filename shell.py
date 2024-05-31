@@ -84,11 +84,11 @@ def main():
         xlist = x.parse(stri)
         
         # implement exit and pwd and newline commands
-        if xlist =="exit":
+        if xlist[0] =="exit":
             break
-        elif xlist == "nothing":
+        elif xlist[0] == "nothing":
             pass
-        elif xlist =="pwd":
+        elif xlist[0] =="pwd":
             print(cwd)
 
         # call cd function
