@@ -55,7 +55,7 @@ class Parser:
     def parse(self, string):
     
         # handle newline
-        if string == "\n":
+        if string == "\n" or string == "":
             string = "nothing"
         
         parsed = string.split()
